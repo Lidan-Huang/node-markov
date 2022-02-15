@@ -28,6 +28,12 @@ class MarkovMachine {
 
   getChains() {
     // TODO: implement this!
+    let chains = new Map();
+    for(let i=0; i<this.words.length-1; i++) {
+      chains.set(this.words[i], [this.words[i+1]]);
+    }
+    chains.set(this.words[this.words.length-1], ["null"]);
+    return chains;
   }
 
 
