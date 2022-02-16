@@ -29,10 +29,21 @@ class MarkovMachine {
   getChains() {
     // TODO: implement this!
     let chains = new Map();
-    for(let i=0; i<this.words.length-1; i++) {
-      chains.set(this.words[i], [this.words[i+1]]);
+    this.words.push(null);
+    for (let i = 0; i < this.words.length - 1; i++) {
+
+      if (this.words[i] == null) {
+        break;
+      }
+
+      if (chains.get(this.words[i])) {
+        chains.get(this.words[i]).push(this.words[i + 1]);
+      } else {
+        chains.set(this.words[i], [this.words[i + 1]]);
+      }
+
     }
-    chains.set(this.words[this.words.length-1], ["null"]);
+    //chains.set(this.words[this.words.length-1], [null]);
     return chains;
   }
 
@@ -42,9 +53,38 @@ class MarkovMachine {
 
   getText() {
     // TODO: implement this!
+    let word;
+    let text = "";
+    let key;
 
-    // - start at the first word in the input text
-    // - find a random word from the following-words of that
-    // - repeat until reaching the terminal null
+    for (let k of this.chains.keys()) {
+      text += k;
+      key = k;
+      word = k;
+      break;
+    }
+
+    while (word != null)  {
+
+      let words = this.chains.get(key);
+
+      let idx = Math.floor(Math.random() * words.length);
+
+      word = words[idx]
+
+      if (word === null) return text;
+
+      text += (" " + word)
+      key = word
+
+    }
+
   }
 }
+
+let testText = "The cat in the hat was written by Dr.Seuss. My cat is in the other room.";
+
+const catInHatMachine = new MarkovMachine(testText);
+catInHatMachine.getText();
+
+module.exports = { MarkovMachine };
